@@ -25,19 +25,22 @@ class CryptoRepositoryImpl: CryptoRepository {
 
 extension CryptoRepositoryImpl {
 
-    func streamPrices() -> AsyncStream<CryptoPriceUpdate> {
+    func streamPrices(string: [String]) -> AsyncStream<TickerUpdate> {
 
         AsyncStream { continuation in
+            
+            let ws = WebSocketManager()
 
-            WebSocketManager.shared.onReceive = { update in
+            ws.onReceive = { update in
                 continuation.yield(update)
             }
 
-            WebSocketManager.shared.connect()
+            ws.connect(symbols: string)
 
             continuation.onTermination = { _ in
-                WebSocketManager.shared.disconnect()
+                ws.disconnect()
             }
         }
     }
 }
+

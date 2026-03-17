@@ -8,6 +8,6 @@
 protocol CryptoRepository {
 
     func fetchMarket() async throws -> [Crypto]
-    func streamPrices() -> AsyncStream<CryptoPriceUpdate>
+    func streamPrices(string: [String]) -> AsyncStream<TickerUpdate>
 
 }

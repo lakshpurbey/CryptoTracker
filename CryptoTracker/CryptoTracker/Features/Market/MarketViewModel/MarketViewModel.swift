@@ -12,6 +12,8 @@ import Combine
 class MarketViewModel: ObservableObject {
 
     @Published var cryptos: [Crypto] = []
+    private var symbolMap: [String: String] = [:]
+
     @Published var searchText = ""
 
     private let fetchMarket: FetchMarketUseCase
@@ -28,8 +30,12 @@ class MarketViewModel: ObservableObject {
     func load() async {
 
         do {
-
             cryptos = try await fetchMarket.execute()
+//            let symbols = Set(cryptos.map { $0.symbol.uppercased() + "USDT" })
+            
+            symbolMap = Dictionary(uniqueKeysWithValues:
+                cryptos.map { ($0.symbol.uppercased() + "USDT", $0.id) }
+            )
             
             startStreaming()
 
@@ -39,6 +45,7 @@ class MarketViewModel: ObservableObject {
             print(error)
         }
     }
+    
 
     var filteredCryptos: [Crypto] {
 
@@ -53,14 +60,14 @@ class MarketViewModel: ObservableObject {
     
     private func startStreaming() {
 
+        let symbols = Array(symbolMap.keys) // symbols are prepared but the execute API does not take arguments
+        
         Task {
 
-            for await update in streamPrices.execute() {
-
-                if let index = cryptos.firstIndex(where: {
-                    $0.id == update.id
-                }) {
-
+            for await update in streamPrices.execute(symbols: symbols) {
+                
+                if let id = symbolMap[update.symbol],
+                   let index = cryptos.firstIndex(where: { $0.id == id }) {
                     cryptos[index].price = update.price
                 }
             }

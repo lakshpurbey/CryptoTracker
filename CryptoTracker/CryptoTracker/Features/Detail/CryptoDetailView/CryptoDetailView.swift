@@ -27,6 +27,9 @@ struct CryptoDetailView: View {
 
             Text("$\(crypto.price, specifier: "%.2f")")
                 .font(.title)
+                .monospacedDigit()
+                .contentTransition(.numericText())
+                .animation(.easeInOut(duration: 0.3), value: crypto.price)
 
             PriceChartView()
 

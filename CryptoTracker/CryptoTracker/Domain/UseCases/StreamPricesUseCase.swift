@@ -13,7 +13,7 @@ class StreamPricesUseCase {
         self.repository = repository
     }
 
-    func execute() -> AsyncStream<CryptoPriceUpdate> {
-        repository.streamPrices()
+    func execute(symbols: [String]) -> AsyncStream<TickerUpdate> {
+        repository.streamPrices(string: symbols)
     }
 }

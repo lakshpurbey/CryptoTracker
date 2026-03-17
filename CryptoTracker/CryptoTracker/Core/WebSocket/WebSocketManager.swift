@@ -17,9 +17,17 @@ final class WebSocketManager {
         string: "wss://stream.binance.com:9443/ws/btcusdt@trade"
     )!
 
-    var onReceive: ((CryptoPriceUpdate) -> Void)?
+    var onReceive: ((TickerUpdate) -> Void)?
 
-    func connect() {
+    func connect(symbols: [String]) {
+        
+        let streams = symbols
+            .map { "\($0.lowercased())@trade" }
+            .joined(separator: "/")
+
+        let url = URL(
+            string: "wss://stream.binance.com:9443/stream?streams=\(streams)"
+        )!
 
         socketTask = URLSession.shared.webSocketTask(with: url)
         socketTask?.resume()
@@ -42,7 +50,12 @@ final class WebSocketManager {
                 switch message {
 
                 case .string(let text):
-                    self?.handle(text: text)
+//                    self?.handle(text: text)
+                    
+                    if case .string(let text) = message {
+                        self?.handle(text: text)
+                                   }
+
 
                 default:
                     break
@@ -62,12 +75,17 @@ final class WebSocketManager {
 
         do {
 
-            let decoded = try JSONDecoder().decode(BinanceTrade.self, from: data)
+            let decoded = try JSONDecoder().decode(StreamResponse.self, from: data)
 
-            let update = CryptoPriceUpdate(
-                id: "bitcoin",
-                price: Double(decoded.price) ?? 0
-            )
+//            let update = CryptoPriceUpdate(
+//                id: "bitcoin",
+//                price: Double(decoded.price) ?? 0
+//            )
+//            
+            let update = TickerUpdate(
+                           symbol: decoded.data.symbol,
+                           price: Double(decoded.data.price) ?? 0
+                       )
 
             onReceive?(update)
 

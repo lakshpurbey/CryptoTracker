@@ -5,11 +5,21 @@
 //  Created by Laxmipurbey on 17/03/26.
 //
 
-struct BinanceTrade: Decodable {
+struct StreamResponse: Decodable {
+    let data: BinanceTrade
+}
 
+struct BinanceTrade: Decodable {
+    let symbol: String
     let price: String
 
     enum CodingKeys: String, CodingKey {
+        case symbol = "s"
         case price = "p"
     }
+}
+
+struct TickerUpdate {
+    let symbol: String
+    let price: Double
 }

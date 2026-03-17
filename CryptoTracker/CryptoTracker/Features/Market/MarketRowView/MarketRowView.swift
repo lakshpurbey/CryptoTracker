@@ -38,6 +38,10 @@ struct MarketRowView: View {
 
                 Text("$\(crypto.price, specifier: "%.2f")")
                     .font(.headline)
+                    .monospacedDigit()
+                    .contentTransition(.numericText())
+                    .animation(.easeInOut(duration: 0.3), value: crypto.price)
+                
             }
         }
         .padding(.vertical, 8)

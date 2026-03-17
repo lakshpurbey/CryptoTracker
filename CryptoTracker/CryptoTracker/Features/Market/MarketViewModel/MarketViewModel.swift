@@ -15,9 +15,14 @@ class MarketViewModel: ObservableObject {
     @Published var searchText = ""
 
     private let fetchMarket: FetchMarketUseCase
+    private let streamPrices: StreamPricesUseCase
 
-    init(fetchMarket: FetchMarketUseCase) {
+
+    init(fetchMarket: FetchMarketUseCase,
+         streamPrices: StreamPricesUseCase) {
         self.fetchMarket = fetchMarket
+        self.streamPrices = streamPrices
+
     }
 
     func load() async {
@@ -25,6 +30,9 @@ class MarketViewModel: ObservableObject {
         do {
 
             cryptos = try await fetchMarket.execute()
+            
+            startStreaming()
+
 
         } catch {
 
@@ -42,4 +50,21 @@ class MarketViewModel: ObservableObject {
             $0.name.lowercased().contains(searchText.lowercased())
         }
     }
+    
+    private func startStreaming() {
+
+        Task {
+
+            for await update in streamPrices.execute() {
+
+                if let index = cryptos.firstIndex(where: {
+                    $0.id == update.id
+                }) {
+
+                    cryptos[index].price = update.price
+                }
+            }
+        }
+    }
+
 }

@@ -16,7 +16,8 @@ struct CryptoTrackerApp: App {
         WindowGroup {
             MarketView(
                 viewModel: MarketViewModel(
-                    fetchMarket: container.fetchMarket
+                    fetchMarket: container.fetchMarket,
+                    streamPrices: container.streamPrices
                 )
             )
         }

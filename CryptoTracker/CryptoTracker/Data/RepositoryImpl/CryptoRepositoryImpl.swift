@@ -22,3 +22,22 @@ class CryptoRepositoryImpl: CryptoRepository {
         return dto.map { $0.toDomain() }
     }
 }
+
+extension CryptoRepositoryImpl {
+
+    func streamPrices() -> AsyncStream<CryptoPriceUpdate> {
+
+        AsyncStream { continuation in
+
+            WebSocketManager.shared.onReceive = { update in
+                continuation.yield(update)
+            }
+
+            WebSocketManager.shared.connect()
+
+            continuation.onTermination = { _ in
+                WebSocketManager.shared.disconnect()
+            }
+        }
+    }
+}

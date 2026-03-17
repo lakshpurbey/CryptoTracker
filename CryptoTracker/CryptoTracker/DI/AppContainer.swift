@@ -14,4 +14,7 @@ class AppContainer {
 
     lazy var fetchMarket =
         FetchMarketUseCase(repository: repository)
+    
+    lazy var streamPrices =
+        StreamPricesUseCase(repository: repository)
 }

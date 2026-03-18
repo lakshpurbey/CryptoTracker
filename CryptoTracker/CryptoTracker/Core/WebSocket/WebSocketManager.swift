@@ -2,7 +2,7 @@
 //  WebSocketManager.swift
 //  CryptoTracker
 //
-//  Created by Laxmipurbey on 17/03/26.
+//  Created by Lakshpurbey on 17/03/26.
 //
 
 import Foundation
@@ -50,7 +50,6 @@ final class WebSocketManager {
                 switch message {
 
                 case .string(let text):
-//                    self?.handle(text: text)
                     
                     if case .string(let text) = message {
                         self?.handle(text: text)
@@ -77,11 +76,6 @@ final class WebSocketManager {
 
             let decoded = try JSONDecoder().decode(StreamResponse.self, from: data)
 
-//            let update = CryptoPriceUpdate(
-//                id: "bitcoin",
-//                price: Double(decoded.price) ?? 0
-//            )
-//            
             let update = TickerUpdate(
                            symbol: decoded.data.symbol,
                            price: Double(decoded.data.price) ?? 0

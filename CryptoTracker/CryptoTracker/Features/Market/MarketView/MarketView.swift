@@ -2,7 +2,7 @@
 //  MarketView.swift
 //  CryptoTracker
 //
-//  Created by Laxmipurbey on 17/03/26.
+//  Created by Lakshpurbey on 17/03/26.
 //
 
 import SwiftUI

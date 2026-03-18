@@ -2,7 +2,7 @@
 //  MarketViewModel.swift
 //  CryptoTracker
 //
-//  Created by Laxmipurbey on 16/03/26.
+//  Created by Lakshpurbey on 16/03/26.
 //
 
 import SwiftUI
@@ -31,7 +31,6 @@ class MarketViewModel: ObservableObject {
 
         do {
             cryptos = try await fetchMarket.execute()
-//            let symbols = Set(cryptos.map { $0.symbol.uppercased() + "USDT" })
             
             symbolMap = Dictionary(uniqueKeysWithValues:
                 cryptos.map { ($0.symbol.uppercased() + "USDT", $0.id) }
@@ -60,7 +59,7 @@ class MarketViewModel: ObservableObject {
     
     private func startStreaming() {
 
-        let symbols = Array(symbolMap.keys) // symbols are prepared but the execute API does not take arguments
+        let symbols = Array(symbolMap.keys) 
         
         Task {
 
